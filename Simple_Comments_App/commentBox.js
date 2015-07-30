@@ -4,15 +4,34 @@ var data = [
 ];
 
 var CommentBox = React.createClass({
-  render: function() {
-    return (
-      <div className="commentBox">
-        <h1>Comments</h1>
-        <CommentList data={this.props.data} />
-        <CommentForm />
-      </div>
-    );
-  }
+	// "props" are immutable, to implement interactions we add
+	// "state".
+	getInitialState: function() {
+	    return {data: []};
+	},
+	// Get the json file
+	componentDidMount: function() {
+		$.ajax({
+			url: this.props.url,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
+  	render: function() {
+	    return (
+	      <div className="commentBox">
+	        <h1>Comments</h1>
+	        <CommentList data={this.state.data} />
+	        <CommentForm />
+	      </div>
+	    );
+  	}
 });
 
 var CommentList = React.createClass({
@@ -59,6 +78,6 @@ var Comment = React.createClass({
 // This call render all components that
 // we have defined before
 React.render(
-  <CommentBox data={data} />,
+  <CommentBox url="comments.json" />,
   document.getElementById('content')
 );
