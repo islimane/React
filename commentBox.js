@@ -3,8 +3,8 @@ var CommentBox = React.createClass({
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList/>
-        <CommentForm/>
+        <CommentList />
+        <CommentForm />
       </div>
     );
   }
@@ -14,7 +14,8 @@ var CommentList = React.createClass({
 	render: function(){
 		return(
 			<div className="commentList">
-				Hello, world! I am a CommentList.
+				<Comment author="Ismael Slimane">This is one comment</Comment>
+				<Comment author="Malcom X">This is *another* comment</Comment>
 			</div>
 		);
 	}
@@ -30,7 +31,23 @@ var CommentForm = React.createClass({
 	}
 });
 
+var Comment = React.createClass({
+	render: function(){
+		var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
+		return(
+			<div className="comment">
+				<h2 className="commentAuthor">
+					{this.props.author}
+				</h2>
+				<span dangerouslySetInnerHTML={{__html: rawMarkup}} />
+			</div>
+		);
+	}
+});
+
+// This call render all components that
+// we have defined before
 React.render(
-  <CommentBox/>,
+  <CommentBox />,
   document.getElementById('content')
 );
