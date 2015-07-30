@@ -4,13 +4,7 @@ var data = [
 ];
 
 var CommentBox = React.createClass({
-	// "props" are immutable, to implement interactions we add
-	// "state".
-	getInitialState: function() {
-	    return {data: []};
-	},
-	// Get the json file
-	componentDidMount: function() {
+	loadCommentsFromServer: function() {
 		$.ajax({
 			url: this.props.url,
 			dataType: 'json',
@@ -22,6 +16,16 @@ var CommentBox = React.createClass({
 				console.error(this.props.url, status, err.toString());
 			}.bind(this)
 		});
+	},
+	// "props" are immutable, to implement interactions we add
+	// "state".
+	getInitialState: function() {
+	    return {data: []};
+	},
+	// Get the json file
+	componentDidMount: function() {
+		this.loadCommentsFromServer();
+    	setInterval(this.loadCommentsFromServer, this.props.pollInterval);
 	},
   	render: function() {
 	    return (
@@ -78,6 +82,6 @@ var Comment = React.createClass({
 // This call render all components that
 // we have defined before
 React.render(
-  <CommentBox url="comments.json" />,
+  <CommentBox url="comments.json" pollInterval={2000} />,
   document.getElementById('content')
 );
