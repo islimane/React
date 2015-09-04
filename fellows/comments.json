@@ -1,0 +1,26 @@
+[
+    {
+        "text": "This is one comment",
+        "author": "Pete Hunt"
+    },
+    {
+        "text": "This is *another* comment",
+        "author": "Jordan Walke"
+    },
+    {
+        "text": "This is *my* comment",
+        "author": "Ismael Slimane"
+    },
+    {
+        "text": "hi!",
+        "author": "Anonymous"
+    },
+    {
+        "text": "hi2!",
+        "author": "Anonymous2"
+    },
+    {
+        "text": "hi3!",
+        "author": "Anonymous3"
+    }
+]
