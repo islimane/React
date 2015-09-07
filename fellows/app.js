@@ -22,7 +22,6 @@ var TimeLine = React.createClass({
 				this.setState({data: data});
 			}.bind(this),
 			error: function(xhr, status, err) {
-				console.log("url: '" + this.props.timeLineUrl + "'");
 				console.error(this.props.url, status, err.toString());
 			}.bind(this)
 		});
@@ -48,18 +47,44 @@ var MyLineMessage = React.createClass({
 	render: function(){
 		return(
 			<div>
-				This is a MyLineMessage
+				<h4>
+					{this.props.data.author}
+				</h4>
+				<p>{this.props.data.title}:</p>
+	        	<p>{this.props.data.text}</p>
+	        	<p>{this.props.data.date}</p>
 			</div>
 		);
 	}
 });
 
 var MyLine = React.createClass({
+	getInitialState: function() {
+		return {data: []};
+	},
+	componentDidMount: function() {
+		$.ajax({
+			url: this.props.myLineUrl,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
 	render: function(){
+		var messages = this.state.data.map(function (message) {
+	      return (
+	        <MyLineMessage data={message} />
+	      );
+	    });
 		return(
 			<div>
 				<h2>My Line</h2>
-				<MyLineMessage />
+				{messages}
 			</div>
 		);
 	}
@@ -70,8 +95,8 @@ var MessageFrame = React.createClass({
 		return(
 			<div>
 				<h1>Fellows</h1>
-				<TimeLine timeLineUrl="comments.json" />
-				<MyLine />
+				<TimeLine timeLineUrl="timeline.json" />
+				<MyLine myLineUrl = "myline.json" />
 			</div>
 		);
 	}
