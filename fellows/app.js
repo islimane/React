@@ -1,30 +1,3 @@
-data = [
-    {
-        "text": "This is one comment",
-        "author": "Pete Hunt"
-    },
-    {
-        "text": "This is *another* comment",
-        "author": "Jordan Walke"
-    },
-    {
-        "text": "This is *my* comment",
-        "author": "Ismael Slimane"
-    },
-    {
-        "text": "hi!",
-        "author": "Anonymous"
-    },
-    {
-        "text": "hi2!",
-        "author": "Anonymous2"
-    },
-    {
-        "text": "hi3!",
-        "author": "Anonymous3"
-    }
-];
-
 var TimeLineMessage = React.createClass({
 	render: function(){
 		return(
@@ -37,8 +10,25 @@ var TimeLineMessage = React.createClass({
 });
 
 var TimeLine = React.createClass({
+	getInitialState: function() {
+		return {data: []};
+	},
+	componentDidMount: function() {
+		$.ajax({
+			url: this.props.timeLineUrl,
+			dataType: 'json',
+			cache: false,
+			success: function(data) {
+				this.setState({data: data});
+			}.bind(this),
+			error: function(xhr, status, err) {
+				console.log("url: '" + this.props.timeLineUrl + "'");
+				console.error(this.props.url, status, err.toString());
+			}.bind(this)
+		});
+	},
 	render: function(){
-		var messages = this.props.data.map(function (message) {
+		var messages = this.state.data.map(function (message) {
 	      return (
 	        <TimeLineMessage author={message.author}>
 	          {message.text}
@@ -80,7 +70,7 @@ var MessageFrame = React.createClass({
 		return(
 			<div>
 				<h1>Fellows</h1>
-				<TimeLine data={this.props.data} />
+				<TimeLine timeLineUrl="comments.json" />
 				<MyLine />
 			</div>
 		);
@@ -88,6 +78,6 @@ var MessageFrame = React.createClass({
 });
 
 React.render(
-  <MessageFrame data={data} />,
+  <MessageFrame />,
   document.getElementById('content')
 );
